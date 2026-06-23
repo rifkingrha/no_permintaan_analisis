@@ -1,0 +1,41 @@
+{
+  "name": "capa_api",
+  "version": "1.0.0",
+  "description": "api for QA capa system",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rifkingrha/capa_api.git"
+  },
+  "keywords": [
+    "capa_api"
+  ],
+  "author": "Muhamad Rifki Nugraha IT Sanbe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rifkingrha/capa_api/issues"
+  },
+  "homepage": "https://github.com/rifkingrha/capa_api#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
+    "ejs": "^4.0.1",
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.14.0",
+    "node-cron": "^4.2.1",
+    "puppeteer": "^24.35.0",
+    "redis": "^5.10.0",
+    "sequelize": "^6.37.7",
+    "sequelize-auto": "^0.8.8",
+    "sequelize-cli": "^6.6.2"
+  }
+}

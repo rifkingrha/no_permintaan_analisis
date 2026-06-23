@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Filter Cycle Report</title>
+
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    }
+
+    .header-info td {
+    padding: 2px 4px;
+    }
+
+    .colon {
+    width: 8px;
+    text-align: center;
+    }
+
+    .spacer {
+    width: 40px;
+    }
+
+    .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+    }
+
+    .report-table th,
+    .report-table td {
+    border: 1px solid #000;
+    padding: 3px;
+    text-align: center;
+    }
+
+    .report-table th {
+    font-weight: bold;
+    }
+
+    .header-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* margin-bottom: 12px;
+    margin-top: 12px; */
+    }
+
+    .header-table td {
+    /* border: 1px solid #000; */
+    vertical-align: middle;
+    }
+
+    .logo-cell {
+    width: 20%;
+    text-align: center;
+    }
+
+    .logo-cell img {
+    /* height: 30px; */
+    width: 100px;
+    }
+
+    .title-cell {
+    width: 50%;
+    text-align: center;
+    font-size: 14px;
+    }
+
+    .doc-cell {
+    width: 30%;
+    padding: 4px;
+    }
+
+    .doc-info {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+    }
+
+    .doc-info {
+        border: 1px solid #000;
+    }
+
+    .doc-info td {
+    border: none;
+    padding: 1px 2px;
+    }
+
+    .page{
+      page-break-after: always;
+    }
+
+    .page-break{
+       page-break-after: always;
+    }
+</style>
+
+</head>
+
+<% 
+const maxRow = 12
+const totalPage = Math.ceil(data.length / maxRow)
+let page = 1
+%>
+
+<body>
+  <% for(let i = 0; i < data.length; i += maxRow){ %>
+  <div class="header">
+    <table width="100%">
+      <tr>
+         <td width="80%">
+           <!-- kiri : judul / info
+           <strong>PENGGUNAAN FILTER</strong> -->
+        </td>
+
+        <td width="20%" align="center">
+           <img src="<%= regisUrl %>" width="80">
+        </td>
+  </tr>
+</table>
+
+    
+    <hr style="margin-top: 0px;">
+    <table class="header-table">
+        <tr>
+            <!-- LOGO -->
+            <td class="logo-cell">
+            <img src="<%= logoUrl %>" alt="LOGO">
+            </td>
+
+            <!-- JUDUL -->
+            <td class="title-cell">
+            <strong>PENGGUNAAN FILTER</strong>
+            </td>
+
+            <!-- INFO DOKUMEN -->
+            <td class="doc-cell">
+            <table class="doc-info">
+                    <tr>
+                    <td>No.</td><td>:</td><td>PRO-PR/FOR/SP/096</td>
+                    </tr>
+                    <tr>
+                    <td>Revision</td><td>:</td><td>05</td>
+                    </tr>
+                    <tr>
+                    <td>Effective Date</td><td>:</td><td>13 OCT 2025</td>
+                    </tr>
+                    <tr>
+                    <td>Next Review Date</td><td>:</td><td>12 OCT 2028</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td><td>:</td><td><%= page %> of <%= totalPage %></td>
+                    </tr>
+            </table>
+            </td>
+        </tr>
+    </table>
+    <hr>
+   
+    <table width="100%" style="margin-bottom:0px; border-collapse:collapse;">
+      <tr>
+        <!-- KIRI -->
+        <td width="50%" style="vertical-align:top;">
+          <table style="border-collapse:collapse;">
+            <tr>
+              <td class="label" style="white-space:nowrap;">Nama Product</td>
+              <td class="titik" style="padding:0 6px;">:</td>
+              <td><strong><%= header['product.product_desc'] || '-' %></strong></td>
+            </tr>
+            <tr>
+              <td class="label" style="white-space:nowrap;">Part Number Filter</td>
+              <td class="titik" style="padding:0 6px;">:</td>
+              <td><strong><%= header['filter.code'] || '-' %></strong></td>
+            </tr>
+            <tr>
+              <td class="label" style="white-space:nowrap;">Serial Number Filter</td>
+              <td class="titik" style="padding:0 6px;">:</td>
+              <td><strong><%= header['receiving.serial_number'] || '-' %></strong></td>
+            </tr>
+          </table>
+        </td>
+
+        <!-- KANAN -->
+        <td width="50%" style="vertical-align:top;">
+          <table style="margin-left:40%; border-collapse:collapse; text-align:left !important;">
+            <tr>
+              <td class="label" style="white-space:nowrap;">Tempat Pemakaian</td>
+              <td class="titik" style="padding:2px 6px;">:</td>
+              <td><strong><%= header['filter.mst_function.name'] || '-' %></strong></td>
+            </tr>
+            <tr>
+              <td class="label" style="white-space:nowrap;">Pore Size Filter</td>
+              <td class="titik" style="padding:2px 6px;">:</td>
+              <td style="text-align:left !important;"><strong><%= header['filter.pore_size'] || '-' %></strong></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <table class="report-table">
+    <thead>
+    <tr>
+    <th rowspan="3">Tgl</th>
+    <th rowspan="3">No.Batch</th>
+    <th rowspan="3">Sterilisasi<br>ke</th>
+
+    <th colspan="6">Before</th>
+    <th colspan="6">After</th>
+
+    <th rowspan="3">Keterangan</th>
+    </tr>
+
+    <tr>
+    <th rowspan="2">Spesifikasi<br>Filter<br>ml/min</th>
+    <th rowspan="2">Jenis<br>Test</th>
+    <th rowspan="2">Pressure<br>Test</th>
+    <th rowspan="2">Test Gas</th>
+    <th rowspan="2">Result<br>P/F</th>
+    <th rowspan="2">Dikerjakan<br>Oleh</th>
+
+    <th rowspan="2">Tgl</th>
+    <th rowspan="2">Jenis<br>Test</th>
+    <th rowspan="2">Pressure<br>Test</th>
+    <th rowspan="2">Test Gas</th>
+    <th rowspan="2">Result<br>P/F</th>
+    <th rowspan="2">Dikerjakan<br>Oleh</th>
+    </tr>
+    </thead>
+
+        <tbody>
+          <% data.slice(i, i + maxRow).forEach(row => { %>
+            <tr>
+                <td><%= row.before?.tgl || '-' %></td>
+                <td><%= row.before?.batch_no || '-' %></td>
+                <td><%= row.before?.cycle_use || '-' %></td>
+                <td>
+                <% 
+                  const min = row.before?.min_flow
+                  const max = row.before?.max_flow
+
+                  if (min != null && max != null && min !== '' && max !== '') { 
+                %>
+                  <%= Number(min).toFixed(2) %> – <%= Number(max).toFixed(2) %>
+                <% 
+                  } else if (min != null && min !== '') { 
+                %>
+                  <%= Number(min).toFixed(2) %>
+                <% 
+                  } else if (max != null && max !== '') { 
+                %>
+                  <%= Number(max).toFixed(2) %>
+                <% 
+                  } else { 
+                %>
+                  -
+                <% } %>
+                </td>
+                <td><%= row.before?.tipe_test || '-' %></td>
+
+                <td><%= row.before?.nilai_test || '-' %></td>
+                <td>
+                    <%= row.before?.media_test === 'Nitrogen' ? '☑ N2 ☐ CA' 
+                      : row.before?.media_test === 'Clean Air' ? '☐ N2 ☑ CA' : '☐ N2 ☐ CA' %>
+                </td>
+                <td><%= row.before?.status_test || '-' %></td>
+                <td><%= row.before?.pic || '-' %></td>
+
+                <td><%= row.after?.tgl || '-' %></td>
+                 <td><%= row.after?.tipe_test || '-' %></td>
+                <td><%= row.after?.nilai_test || '-' %></td>
+                <td>
+                    <%= row.after?.media_test === 'Nitrogen' ? '☑ N2 ☐ CA' 
+                      : row.after?.media_test === 'Clean Air' ? '☐ N2 ☑ CA' : '☐ N2 ☐ CA' %>
+                </td>
+                <td><%= row.after?.status_test || '-' %></td>
+                <td><%= row.after?.pic || '-' %></td>
+                <td><%= row.before?.keterangan || '-' %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <table class="report-table">
+        <tr>
+            <!-- KIRI -->
+            <td style="width:40%; vertical-align:top; text-align:left;">
+            <label>☐ MCY2220DFLPH4 Maximum Flow 1.30 ml/min (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ LAGL04TP6 Maximum Flow 5.00 ml/min (8 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ LAGR04TP6 Maximum Flow 0.20 ml/min (30 kali Autoclave atau 6 Bulan Pemakaian)</label><br>
+            <label>☐ SLK 7002 PFRP Maximum Flow 0.12 ml/min (30 kali Autoclave atau 6 Bulan Pemakaian)</label><br>
+            <label>☐ SLK 7001 PFRP (30 kali Autoclave atau 6 Bulan Pemakaian)</label><br>
+            <label>☐ ABIDFL7PH4 Maximum Flow 11.0 ml/min (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ MCY4440NLPH4 (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOPORE2-IV 5442507H1 (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOPORE2 5441507H9 Maximum Flow 18.0 ml/min (8 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOPORE2 5441506G9 (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOPORE2 5442507H8 Maximum Flow 4.1 ml/min (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOPURE IND 5502501P1 (1 kali Autoclave atau 3 Bulan Pemakaian)</label>
+            </td>
+
+            <!-- TENGAH -->
+            <td style="width:40%; vertical-align:top; text-align:left;">
+            <label>☐ SARTOPORE2 5442506G1 (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOFLOUR 5181507T8 (30 kali Autoclave atau 6 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOFLOUR 5182507T1 (30 kali Autoclave atau 6 Bulan Pemakaian)</label><br>
+            <label>☐ SARTOLON510507H9 Maximum Flow 18.0 ml/min (15 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ MIDISART 2000 (1 kali Autoclave atau 3 Bulan Pemakaian)</label><br>
+            <label>☐ Faktor koreksi Spesifikasi Filter Menggunakan N2 = 0.82 x Spek COA</label>
+            </td>
+
+            <!-- KANAN -->
+            <td style="width:20%; vertical-align:top;">
+            <strong>Catatan Penting :</strong>
+            <div style="height:100px;"></div>
+
+            <hr>
+
+            <div style="text-align:center; margin-top:0px;">
+                <strong>Diperiksa Oleh</strong><br><br><br><br><br><br>
+                <strong>Supervisor Produksi</strong>
+            </div>
+            </td>
+        </tr>
+    </table>
+<hr>
+    <p style="margin-top:10px;">
+      \\Cimareme\Release\SanbeU3/PRO\PR\FOR\PRO-PR.FOR.SP.096 - Penggunaan Filter - R05.doc
+    </p>
+<% page++ } %>
+</body>
+</html>
