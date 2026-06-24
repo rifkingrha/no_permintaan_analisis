@@ -5,19 +5,19 @@
       <div class="card-body border-b border-base-300 flex-row justify-between items-center">
         <div>
           <h2 class="card-title text-2xl font-bold">User Profile</h2>
-          <p class="text-sm opacity-60">View account details and update personal information</p>
+          <p class="text-sm opacity-60">View account details personal information</p>
         </div>
-        <button 
+        <!-- <button 
           @click="isEditing ? handleSave() : (isEditing = true)" 
           :class="['btn btn-sm shadow-md', isEditing ? 'btn-success text-white' : 'btn-primary']"
         >
           {{ isEditing ? 'Save Changes' : 'Edit Profile' }}
-        </button>
+        </button> -->
       </div>
 
       <div class="card-body space-y-8">
         <div class="flex flex-col md:flex-row items-start gap-8 p-6 bg-base-200/40 rounded-2xl border border-base-300">
-            <div class="avatar group relative">
+            <!-- <div class="avatar group relative">
                 <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-inner cursor-pointer" @click="triggerFileInput">
                     <img :src="userProfile.imgUrl || '/images/default-avatar.png'" />
                     <div v-if="isEditing" class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -25,17 +25,28 @@
                     </div>
                 </div>
                 <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFileUpload" />
-            </div>
+            </div> -->
             
             <div class="flex-1 w-full space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-control">
                         <label class="label"><span class="label-text font-bold opacity-60">Username</span></label>
-                        <p class="text-lg font-mono p-3 bg-base-300/50 rounded-lg border border-base-300/50">@{{ userProfile.username }}</p>
+                        <p class="text-lg font-mono p-3 bg-base-300/50 rounded-lg border border-base-300/50">{{ userProfile.username }}</p>
                     </div>
                     <div class="form-control">
                         <label class="label"><span class="label-text font-bold opacity-60">Email Address</span></label>
                         <p class="text-lg p-3 bg-base-300/50 rounded-lg border border-base-300/50">{{ userProfile.email }}</p>
+                    </div>
+                </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Access Level</span></label>
+                        <p class="text-lg font-mono p-3 bg-base-300/50 rounded-lg border border-base-300/50">{{ userProfile.role }}</p>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Department</span></label>
+                        <p class="text-lg p-3 bg-base-300/50 rounded-lg border border-base-300/50">{{ userProfile.department }}</p>
                     </div>
                 </div>
 
@@ -48,7 +59,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           <div class="form-control">
             <label class="label"><span class="label-text font-bold">First Name</span></label>
@@ -88,9 +99,9 @@
             </select>
             <p v-else class="text-lg p-2 border-b border-base-300">{{ userProfile.sex || '-' }}</p>
           </div>
-        </div>
+        </div> -->
 
-        <div class="form-control w-full">
+        <!-- <div class="form-control w-full">
           <label class="label"><span class="label-text font-bold">Address</span></label>
           <textarea 
             v-if="isEditing" 
@@ -98,11 +109,11 @@
             class="textarea textarea-bordered bg-base-200 h-24 w-full"
           ></textarea>
           <p v-else class="text-lg p-2 border-b border-base-300 min-h-[3rem]">{{ userProfile.address || '-' }}</p>
-        </div>
+        </div> -->
 
-        <div v-if="isEditing" class="card-actions justify-end pt-4">
+        <!-- <div v-if="isEditing" class="card-actions justify-end pt-4">
           <button @click="isEditing = false" class="btn btn-ghost btn-sm">Discard Changes</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>
@@ -114,16 +125,10 @@ import { apiRequest } from '../services/apiService';
 
 const isEditing = ref(false);
 const userProfile = ref({
-  firstName: '',
-  lastName: '',
-  employeeId: '',
-  phoneNum: '',
-  address: '',
-  dateOfBirth: '',
-  sex: '',
-  imgUrl: '',
   username: '',
-  email: ''
+  email: '',
+  role:'',
+  department:''
 });
 const fileInput = ref(null);
 const selectedFile = ref(null);
@@ -144,18 +149,12 @@ const fetchUserProfile = async () => {
   try {
     const userAccount = JSON.parse(localStorage.getItem('userAccount'));
     if (!userAccount || !userAccount.id) return;
-    const response = await apiRequest(`/user/by_user_account/${userAccount.id}`, { method: 'GET' });
+    const response = await apiRequest(`/user-accounts/by_user_account/${userAccount.id}`, { method: 'GET' });
     if (response.success) {
-        userProfile.value.firstName = response.data.firstName,
-        userProfile.value.lastName = response.data.lastName,
-        userProfile.value.employeeId = response.data.employeeId,
-        userProfile.value.phoneNum = response.data.phoneNum,
-        userProfile.value.address = response.data.address,
-        userProfile.value.dateOfBirth = response.data.dateOfBirth,
-        userProfile.value.sex = response.data.sex,
-        userProfile.value.imgUrl = response.data.imgUrl,
-        userProfile.value.username = userAccount.username,
-        userProfile.value.email = userAccount.email
+        userProfile.value.username = response.data.username,
+        userProfile.value.email = response.data.email,
+        userProfile.value.role = response.data.access.role,
+        userProfile.value.department = response.data.department.name
       console.log(userProfile.value);
     }
   } catch (err) {

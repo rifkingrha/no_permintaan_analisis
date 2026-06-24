@@ -150,5 +150,37 @@ module.exports = {
     } catch (err) {
       error_handling(res, err);
     }
-  }
+  },
+
+  // userById
+  async userById(req, res) {
+    try {
+      const data = await db.user_account.findByPk(req.params.id, {
+        include: [
+          {
+            model: db.access_level,
+            as: 'access',
+            attributes: ['id', 'role']
+          },
+          {
+            model: db.mst_department,
+            as: 'department',
+            attributes: ['id', 'code', 'name']
+          }
+        ],
+        attributes: {
+          exclude: ['password']
+        }
+      });
+
+      if (!data) {
+        return res.notFound('User Account not found');
+      }
+
+      res.success(data);
+
+    } catch (err) {
+      res.error(err.message);
+    }
+  },
 };

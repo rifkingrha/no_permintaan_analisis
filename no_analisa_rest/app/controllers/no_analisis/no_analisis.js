@@ -46,6 +46,11 @@ const noAnalisis = async (req, res) => {
         model: db.user_account,
         as: 'user',
         attributes: ['id','username']
+      },
+      {
+        model: db.mst_reason,
+        as: 'reason',
+        attributes: ['id','code', 'name']
       }
     ];
 

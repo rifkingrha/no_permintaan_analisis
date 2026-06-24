@@ -40,7 +40,7 @@ const noAnalisisHistory = async (req, res) => {
     const dept = req.query.dept
     const offset = (page - 1) * limit
 
-    let whereClause = `WHERE 1=1 AND combined.deletedAt IS NULL`
+    let whereClause = `WHERE 1=1 AND status = 1 AND combined.deletedAt IS NULL`
     let replacements = {}
 
     /* =========================
@@ -123,6 +123,7 @@ const noAnalisisHistory = async (req, res) => {
         jcheck.name AS check_name,
         no_analisis.user_id,
         juser.username AS username,
+        no_analisis.status,
         no_analisis.createdAt,
         no_analisis.deletedAt
         FROM no_analisis AS no_analisis 
@@ -333,7 +334,7 @@ const historyExcel = async (req, res) => {
       date_to
     } = req.query
 
-    let whereClause = `WHERE 1=1 AND combined.deletedAt IS NULL`
+    let whereClause = `WHERE 1=1 AND status = 1 AND combined.deletedAt IS NULL`
     let replacements = {}
 
 
@@ -414,6 +415,7 @@ const historyExcel = async (req, res) => {
         jcheck.name AS check_name,
         no_analisis.user_id,
         juser.username AS username,
+        no_analisis.status,
         no_analisis.createdAt,
         no_analisis.deletedAt
         FROM no_analisis AS no_analisis 
@@ -506,7 +508,7 @@ const historyPdf = async (req, res) => {
       date_to
     } = req.query
 
-    let whereClause = `WHERE 1=1 AND combined.deletedAt IS NULL`
+    let whereClause = `WHERE 1=1 AND status = 1 AND combined.deletedAt IS NULL`
     let replacements = {}
 
 
@@ -587,6 +589,7 @@ const historyPdf = async (req, res) => {
         jcheck.name AS check_name,
         no_analisis.user_id,
         juser.username AS username,
+        no_analisis.status,
         no_analisis.createdAt,
         no_analisis.deletedAt
         FROM no_analisis AS no_analisis 

@@ -643,6 +643,8 @@ onMounted(() => {
                               </span>
                           </div>
                       </th>
+                      <th v-if="activeStatus === '0'">Abort</th>
+                      <th v-if="activeStatus === '0'">Remark</th>
                       <th v-if="userAccount.role === 'admin' && activeStatus === '1'">Actions</th>
                   </tr>
                   </thead>
@@ -661,6 +663,8 @@ onMounted(() => {
                       <td>{{ item.sampel.name }}</td>
                       <td>{{ item.user.username }}</td>
                       <td>{{ format(item.createdAt, 'dd-MM-yyyy HH:mm') }} </td>
+                      <td v-if="activeStatus === '0'">{{item.reason.name}}</td>
+                      <td v-if="activeStatus === '0'">{{item.reason_remark}}</td>
                       <td v-if="userAccount.role === 'admin' && activeStatus === '1'">
                         <div class="flex gap-2">
                           <button class="btn btn-sm btn-error" @click.stop="showAbortConfirm(item)">Abort</button>
