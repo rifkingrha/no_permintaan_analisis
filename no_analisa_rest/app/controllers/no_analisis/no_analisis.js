@@ -329,7 +329,7 @@ const executeAbort = async (req, res) => {
     await data.update({
       status: '0',
       reason_code: reason_code,
-      remark_hold: remark || null,
+      reason_remark: remark || null,
       abort_by: abort_by,
       abort_date: new Date()
     });
