@@ -135,7 +135,7 @@ const clearSearch = (searchType) => {
         console.log('no search type')
         searchQuery.value = '';
         currentPage.value = 1;
-        if(role === 'admin') {
+        if(userAccount.role === 'admin') {
             selectedDept.value = [];
         }  
         selectedSampel.value = [];  
