@@ -663,7 +663,7 @@ onMounted(() => {
                       <td>{{ item.sampel.name }}</td>
                       <td>{{ item.user.username }}</td>
                       <td>{{ format(item.createdAt, 'dd-MM-yyyy HH:mm') }} </td>
-                      <td v-if="activeStatus === '0'">{{item.reason.name}}</td>
+                      <td v-if="activeStatus === '0'">{{item.reason.name? item.reason.name : "-"}}</td>
                       <td v-if="activeStatus === '0'">{{item.reason_remark}}</td>
                       <td v-if="userAccount.role === 'admin' && activeStatus === '1'">
                         <div class="flex gap-2">
