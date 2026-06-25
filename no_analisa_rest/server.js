@@ -1,9 +1,18 @@
-const express = require('express')
-const app = express()
-const port = 3000
+require('dotenv').config();
+
+const express = require('express');
+const app = express();
+const cors = require('cors');
+
+const port = process.env.SERVER_PORT || 5174;
 //const { rejectExpiredFilter } = require('./app/cron/filter');
 
-require('dotenv').config()
+// Izinkan frontend Vite
+app.use(cors({
+    origin: 'http://192.168.11.13:5173',
+    credentials: true
+}));
+
 require('./config/express.js')(app,express)
 
 app.set('trust proxy', true);

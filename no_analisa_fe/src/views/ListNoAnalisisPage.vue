@@ -590,6 +590,15 @@ const generatePdf = async (report) => {
                                         </span>
                                     </div>
                                 </th>
+                                <th @click="handleSort('status')" class="cursor-pointer hover:bg-base-200">
+                                    <div class="flex items-center gap-1">
+                                        Status
+                                        <span v-if="sortColumn === 'status'">
+                                            <span v-if="sortDirection === 'ASC'">▲</span>
+                                            <span v-else>▼</span>
+                                        </span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -628,6 +637,17 @@ const generatePdf = async (report) => {
                                     <p class="font-mono text-sm">{{ noAnalisisHistory.sampel_name? noAnalisisHistory.sampel_name : '-'}}</p>
                                 </td>
                                 <td class="font-mono text-sm">{{ format(noAnalisisHistory.createdAt, 'dd-MM-yyyy HH:mm') }}</td>
+                                <td>
+                                    <span
+                                        class="badge text-white mb-1 text-xs"
+                                        :class="{
+                                            'bg-red-500': noAnalisisHistory.status === 'Abort',
+                                            'bg-green-500': noAnalisisHistory.status === 'Active'
+                                        }"
+                                    >
+                                        {{ noAnalisisHistory.status || '-' }}
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
