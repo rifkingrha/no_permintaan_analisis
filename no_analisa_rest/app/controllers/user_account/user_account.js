@@ -9,7 +9,25 @@ module.exports = {
   async list(req, res) {
     try {
       const { _q, _sort, _order } = req.query;
-      const filter = { where: {} };
+      //const filter = { where: {} };
+
+      const filter = {
+        where: {},
+        include: [
+          {
+            model: db.access_level,
+            as: 'access',
+            attributes: ['id', 'role'],
+            required: false
+          },
+          {
+            model: db.mst_department,
+            as: 'department',
+            attributes: ['id', 'code', 'name'],
+            required: false
+          }
+        ]
+      };
 
       // Search logic for User Account fields
       if (_q) {
@@ -17,6 +35,8 @@ module.exports = {
           [Op.or]: [
             { username: { [Op.like]: `%${_q}%` } },
             { email: { [Op.like]: `%${_q}%` } },
+            { '$access.role$': { [Op.like]: `%${_q}%` } },
+            { '$department.name$': { [Op.like]: `%${_q}%` } },
           ]
         };
       }
@@ -32,10 +52,10 @@ module.exports = {
 
       const data = await db.user_account.findAll({
         ...filter,
-       include: [
-          { model: db.access_level, as: 'access', attributes: ["id","role"] },
-          { model: db.mst_department, as: 'department', attributes: ["id","code","name"] }
-        ],
+      //  include: [
+      //     { model: db.access_level, as: 'access', attributes: ["id","role"],  required: false },
+      //     { model: db.mst_department, as: 'department', attributes: ["id","code","name"],  required: false }
+      //   ],
         offset: paginate.startIndex || 0,
         limit: paginate.limit || null,
         order,
