@@ -490,133 +490,78 @@ onMounted(() => {
             <div class="modal-box max-w-6xl border-t-4 border-primary">
                 <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h3 class="font-bold text-2xl text-primary">Filter History Report Details</h3>
+                        <h3 class="font-bold text-2xl text-primary mb-2">Audit Trail Detail</h3>
                     </div>
                     <button class="btn btn-sm btn-circle btn-ghost" @click="showDetailModal = false">✕</button>
                 </div>
 
                 <div v-if="selectedDetail" class="space-y-6">
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-base-200 p-4 rounded-lg">
-                            <span class="text-xs uppercase font-bold opacity-50">Filter Unique Code</span>
-                            <p class="text-lg font-mono font-bold">{{ selectedDetail.filter_code_no }}</p>
+                            <span class="text-xs uppercase font-bold opacity-50">User</span>
+                            <p class="text-lg font-mono font-bold mt-1">{{ selectedDetail.user }}</p>
+                            <span class="text-xs uppercase font-bold opacity-50">Action</span>
+                            <p class="text-lg font-bold mt-1">{{ selectedDetail.action }}</p>
+                            <span class="text-xs uppercase font-bold opacity-50">Menu</span>
+                            <p class="text-lg font-bold mt-1">{{ selectedDetail.menu }}</p>
                         </div>
                         <div class="bg-base-200 p-4 rounded-lg">
-                            <span class="text-xs uppercase font-bold opacity-50">Issuance Status</span>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="badge badge-primary">{{ selectedDetail.issuance_type }}</span>
-                                <span :class="['badge', selectedDetail.status_issuance === 'Ready to Use' ? 'badge-success text-white' : 'badge-ghost']">
-                                    {{ selectedDetail.status_issuance }}
-                                </span>
+                            <span class="text-xs uppercase font-bold opacity-50">IP Address</span>
+                            <p class="text-lg font-mono font-bold mt-1">{{ selectedDetail.client_ip }}</p>
+                            <span class="text-xs uppercase font-bold opacity-50">Date</span>
+                            <p class="text-lg font-bold mt-1">{{  selectedDetail.date ? format(new Date(selectedDetail.date), 'dd-MM-yyyy HH:mm:ss') : '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-base-300 pt-6">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Start Value</h4>
+                            <div class="bg-base-200 p-4 rounded-lg min-h-[120px] max-h-[300px] overflow-y-auto">
+                                <div v-if="formatAuditValue(selectedDetail.start_value)" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div v-for="item in formatAuditValue(selectedDetail.start_value)" :key="item.label" class="border-b border-base-300 pb-2">
+                                        <span class="font-bold text-gray-500 block text-xs uppercase tracking-tighter">{{ item.label }}</span>
+                                        <span class="text-base-content text-sm break-words">{{ item.value || '-' }}</span>
+                                    </div>
+                                </div>
+                                <span v-else class="text-sm opacity-50 italic">No data available.</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Final Value</h4>
+                            <div class="bg-base-200 p-4 rounded-lg min-h-[120px] max-h-[300px] overflow-y-auto">
+                                <div v-if="formatAuditValue(selectedDetail.final_value)" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div v-for="item in formatAuditValue(selectedDetail.final_value)" :key="item.label" class="border-b border-base-300 pb-2">
+                                        <span class="font-bold text-gray-500 block text-xs uppercase tracking-tighter">{{ item.label }}</span>
+                                        <span class="text-base-content text-sm break-words">{{ item.value || '-' }}</span>
+                                    </div>
+                                </div>
+                                <span v-else class="text-sm opacity-50 italic">No data available.</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 border-y border-base-300 py-6">
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Product Info</h4>
-                            <div>
-                                <span class="text-xs opacity-60">Description</span>
-                                <p class="font-semibold">{{ selectedDetail.product? selectedDetail.product.product_desc : "-" }}</p>
-                            </div>
-                            <div>
-                                <span class="text-xs opacity-60">Product Code</span>
-                                <p class="font-mono text-sm">{{ selectedDetail.product_code? selectedDetail.product_code : "-" }}</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Machine Usage Info</h4>
-                            <div>
-                                <span class="text-xs opacity-60">Machine Code</span>
-                                <p class="font-semibold">{{ selectedDetail.machine? selectedDetail.machine.code : "-" }}</p>
-                            </div>
-                            <div>
-                                <span class="text-xs opacity-60">Machine Name</span>
-                                <p class="font-semibold">{{ selectedDetail.machine? selectedDetail.machine.name : "-" }}</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Filter Info</h4>
-                            <div>
-                                <span class="text-xs opacity-60">Filter Code & Function</span>
-                                <p class="text-sm">
-                                    <span class="font-bold">{{ selectedDetail.filter?.code }}</span><br>
-                                    <span class="opacity-70">{{ selectedDetail.filter?.mst_function?.name }}</span>
-                                </p>
-                            </div>
-                            <div>
-                                <span class="text-xs opacity-60">Cycle Usage</span>
-                                <p class="text-sm">
-                                    <span class="font-semibold">{{ selectedDetail.cycle_use }} out of {{ selectedDetail.filter?.cycle_usage }}</span><br>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Integrity Tests</h4>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <span class="badge badge-info text-white text-[10px] h-4">Diffusion</span>
-                                    <p class="font-bold">{{ selectedDetail.diffusion_test || '-' }}</p>
-                                </div>
-                                <div>
-                                    <span class="badge badge-info text-white text-[10px] h-4">Bubble</span>
-                                    <p class="font-bold">{{ selectedDetail.bubble_test || '-' }}</p>
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Changes</h4>
+                        <div class="bg-base-200 p-4 rounded-lg min-h-[120px] max-h-[300px] overflow-y-auto">
+                            <div v-if="formatAuditValue(selectedDetail.changes)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div v-for="item in formatAuditValue(selectedDetail.changes)" :key="item.label" class="border-b border-base-300 pb-2">
+                                    <span class="font-bold text-gray-500 block text-xs uppercase tracking-tighter">{{ item.label }}</span>
+                                    <span class="text-base-content text-sm break-words font-semibold">{{ item.value || '-' }}</span>
                                 </div>
                             </div>
-                            <div class="pt-2 border-t">
-                                <span class="badge badge-info text-white text-[10px] h-4">Result</span>
-                                <p :class="['text-lg font-black', selectedDetail.status_test === 'Pass' ? 'text-success' : 'text-error']">
-                                    {{ selectedDetail.status_test || 'N/A' }}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-sm text-secondary uppercase tracking-wider">Batch Details</h4>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <span class="badge badge-info text-white text-[10px] h-4">Batch Number</span>
-                                    <p class="font-bold">{{ selectedDetail.batch_no || '-' }}</p>
-                                </div>
-                                <div>
-                                    <span class="badge badge-info text-white text-[10px] h-4">Clog Status</span>
-                                    <p class="font-bold">{{ selectedDetail.status_batch || '-' }}</p>
-                                </div>
-                            </div>
+                            <span v-else class="text-sm opacity-50 italic">No data available.</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="p-2">
-                            <span class="text-xs opacity-60 block">PIC</span>
-                            <span class="font-bold">{{ selectedDetail.pic }}</span>
-                        </div>
-                        <div class="p-2 border-x border-base-300">
-                            <span class="text-xs opacity-60 block">Start Date</span>
-                            <span class="font-bold">{{ selectedDetail.start_date ? format(new Date(selectedDetail.start_date), 'dd-MM-yyyy') : '-' }}</span>
-                        </div>
-                        <div class="p-2">
-                            <span class="text-xs opacity-60 block">End Date</span>
-                            <span class="font-bold">{{ selectedDetail.end_date ? format(new Date(selectedDetail.end_date), 'dd-MM-yyyy') : '-' }}</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-warning/10 p-4 rounded-lg border border-warning/20">
-                        <span class="text-xs uppercase font-bold text-warning-content opacity-70">Remarks</span>
-                        <p class="mt-1 italic text-sm">{{ selectedDetail.remark || 'No remarks provided.' }}</p>
-                    </div>
                 </div>
 
                 <div class="modal-action">
                     <button class="btn" @click="showDetailModal = false">Close</button>
-                    <button class="btn btn-primary" @click="loadEditForm(selectedDetail); showDetailModal = false">
-                        Edit This Record
-                    </button>
                 </div>
             </div>
+            
             <form method="dialog" class="modal-backdrop" @click="showDetailModal = false">
                 <button>close</button>
             </form>

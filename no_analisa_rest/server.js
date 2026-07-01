@@ -9,7 +9,7 @@ const port = process.env.SERVER_PORT || 5174;
 
 // Izinkan frontend Vite
 app.use(cors({
-    origin: 'http://192.168.11.13:5173',
+    origin: 'http://192.168.11.110:5173',
     credentials: true
 }));
 
